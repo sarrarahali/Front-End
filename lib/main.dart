@@ -1,5 +1,6 @@
 
 import 'package:boy/Screens/MainScreen.dart';
+import 'package:boy/Screens/SplachScreen.dart';
 
 
 

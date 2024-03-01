@@ -26,5 +26,10 @@ static HexColor AcceptButton = HexColor('#84DE88');
 
 static HexColor RefuseButton = HexColor('#DC6056');
 
+static HexColor localisation = HexColor('#FFC524');
+
+static HexColor localisationbg = HexColor('#FFF6EA');
+
+
 }
 

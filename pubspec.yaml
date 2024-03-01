@@ -44,8 +44,12 @@ dependencies:
   syncfusion_flutter_sliders: ^24.2.7
   easy_stepper: ^0.8.3
   flutter_native_splash: ^2.3.10
-  
-
+  gradient_line_graph: ^1.0.0
+  darshan_linear_graph: ^0.0.1
+  animated_custom_dropdown: ^3.0.0
+  google_maps_flutter: ^2.6.0
+  flutter_polyline_points: ^2.0.0
+  location: ^5.0.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -2,6 +2,7 @@
 import 'package:boy/Screens/NotificationSceen.dart';
 import 'package:boy/Screens/PendingScreen.dart';
 import 'package:boy/Screens/Profile/Screen/ProfileScreen.dart';
+import 'package:boy/Screens/homependeingScreen.dart';
 import 'package:boy/Screens/mainhome_Screen.dart';
 
 
@@ -23,7 +24,7 @@ class _MainScreenState extends State<MainScreen> {
     
     
    MainScreenhome(),
-    PendeingScreen(),
+   MainPendingScreen(),
     NotificationScreen(),
     ProfilScreen(),
   ];

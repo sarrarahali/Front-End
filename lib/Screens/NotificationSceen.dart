@@ -10,7 +10,7 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  // Sample data for notifications
+  
   List<Map<String, dynamic>> notifications = [
     {
       'imagePath':'images/commande.png',
@@ -49,7 +49,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       'time': '18h45',
     },
 
-    // Add more notification items as needed
+    
   ];
 
   @override
@@ -83,16 +83,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 20), // Space between first row and list view
-            // List View
+            const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
                 shrinkWrap: true,
                
-                itemCount: notifications.length, // Number of notification items
+                itemCount: notifications.length, 
                 itemBuilder: (context, index) {
-                  // Example List Item
+                 
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6.0),
                     child: Card(

@@ -1,4 +1,6 @@
-import 'package:boy/Screens/OrderDetailsScreen2.dart';
+
+
+import 'package:boy/Screens/OrderDetailScreen.dart';
 import 'package:boy/Widgets/Colors.dart';
 import 'package:boy/Widgets/Easystepper.dart';
 
@@ -20,23 +22,9 @@ final double _max = 100;
    double _sliderValue = 50.0; 
 
 
-   List<String> dates = ["16/02/2024 ", "16/02/2024   15:00","14/02/2024   12:30","10/02/2024   5:10"
-  ];
-
-  List<String> IDNP = [
-    "nom et prenom ","nom et prenom ","nom et prenom ","nom et prenom ","nom et prenom ",
-    
-  ];
-  List<String> PRIX = [
-    "7 DT","4 DT","5 DT","7.5 DT "," 6 DT"
-  ];
-
- List<String> numid = [
-    "7123","4999","5478","7221 ","1087","1234",
-    
-  ];
-  static List<Commandemodel> mainCommandeList = [];
-  List<Commandemodel> displayList = List.from(mainCommandeList);
+  
+  static List<Commande> mainCommandeList = [];
+  List<Commande> displayList = List.from(mainCommandeList);
   
   var activeStep = 0;
 
@@ -77,7 +65,7 @@ Expanded(
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start, // Add this line
+            crossAxisAlignment: CrossAxisAlignment.start, 
             children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -107,19 +95,38 @@ Expanded(
                         "à la livraison",
                         style: TextStyle(color: Colors.black),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          // Navigate to Order Details page
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) =>const OrderDetailsScreen2()),
-                          );
-                        },
-                        child: Icon(
-                          Ionicons.chevron_forward_outline,
-                          color: GlobalColors.iconColor,
-                        ),
-                      )
+                      
+
+IconButton(
+  onPressed: () {
+  Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => OrderDetailsScreen(
+      index: index,
+      commande: Commande(
+        PRIX[index],
+        int.parse(numid[index]),
+        IDNP[index],
+        DateTime.now(),
+        details[index],
+        localisation[index],
+        KM[index],
+        time[index],
+        Comment[index],
+      ),
+      source: 'PendeingScreen', // Pass the source parameter
+    ),
+  ),
+);
+},
+  icon: Icon(
+    Ionicons.chevron_forward_outline,
+    color: GlobalColors.iconColor,
+  ),
+),        
+
+
                     ],
                   ),
                 ],

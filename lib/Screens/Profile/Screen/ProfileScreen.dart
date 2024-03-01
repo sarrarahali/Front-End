@@ -1,6 +1,7 @@
 import 'package:boy/Screens/Profile/Screen/HistoriqueScreen.dart';
 import 'package:boy/Screens/Profile/Screen/InformationScreen.dart';
-import 'package:boy/Screens/Profile/Screen/StatistiqueScreen.dart';
+
+import 'package:boy/Screens/Profile/Screen/statistique.dart';
 import 'package:boy/Widgets/Colors.dart';
 
 import 'package:flutter/material.dart';

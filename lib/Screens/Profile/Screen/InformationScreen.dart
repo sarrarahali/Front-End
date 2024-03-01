@@ -45,9 +45,8 @@ class _buildInformationState extends State<buildInformation> {
             controller: phoneController,
           ),
           const SizedBox(height: 20),
-       Align(
-  alignment: Alignment.centerLeft,
-  child: Text(
+           Align(alignment: Alignment.centerLeft,
+                child: Text(
     "Delivery status",
     textAlign: TextAlign.right, 
     style: TextStyle(

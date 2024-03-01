@@ -1,8 +1,11 @@
 
 import 'package:boy/Screens/OrderDetailScreen.dart';
+import 'package:boy/Screens/traking_screen.dart';
+import 'package:boy/model/commande_model.dart';
 import 'package:flutter/material.dart';
 import 'package:boy/Widgets/Colors.dart';
 import 'package:boy/Widgets/search.dart';
+
 
 import 'package:ionicons/ionicons.dart';
 
@@ -14,25 +17,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
- List<String> dates = ["16/02/2024 ", "16/02/2024   15:00","14/02/2024   12:30","10/02/2024   5:10","11/02/2024   10:01","01/02/2024 17:10"
-  ];
+ 
 
-  List<String> IDNP = [
-    "nom et prenom ","nom et prenom ","nom et prenom ","nom et prenom ","nom et prenom ","nom et prenom ",
-    "nom et prenom "
-  ];
-  List<String> PRIX = [
-    "7 DT","4 DT","5 DT","7.5 DT "," 6 DT","10 DT",
-    "10.5 DT "
-  ];
-
- List<String> numid = [
-    "7123","4999","5478","7221 ","1087","1234",
-    "1044"
-  ];
-  
-
-  void updateList(String value) {}
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +60,16 @@ class _HomeScreenState extends State<HomeScreen> {
                color: GlobalColors.childmainColor,
                borderRadius: BorderRadius.circular(8),
              ),
-             child: IconButton(
-               onPressed: () {},
-                                 icon: Image.asset("images/pin-icon.png",
-)             ),
+             child:IconButton(
+  onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context)=> trakingscreen()
+      ),   
+      );
+     },
+  icon: Image.asset("images/pin-icon.png"),
+),
 
            ),
 
@@ -113,6 +105,7 @@ Row(
     physics: BouncingScrollPhysics(),
     shrinkWrap: true,
     itemCount: dates.length,
+
     itemBuilder: (BuildContext context, int index) => Container(
       child: Card(
         shape: RoundedRectangleBorder(
@@ -120,7 +113,7 @@ Row(
         ),
         child: Container(
           width: MediaQuery.of(context).size.width,
-          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start, 
             children: <Widget>[
@@ -151,23 +144,35 @@ Row(
                       Text(
                         "à la livraison",
                         style: TextStyle(color: Colors.black),
-                      ),
+                      ),  
                      IconButton(
   onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => OrderDetailsScreen(index: index),
+  Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => OrderDetailsScreen(
+      index: index,
+      commande: Commande(
+        PRIX[index],
+        int.parse(numid[index]),
+        IDNP[index],
+        DateTime.now(),
+        details[index],
+        localisation[index],
+        KM[index],
+        time[index],
+        Comment[index],
       ),
-    );
-  },
+      source: 'HomeScreen', // Pass the source parameter
+    ),
+  ),
+);
+},
   icon: Icon(
     Ionicons.chevron_forward_outline,
     color: GlobalColors.iconColor,
   ),
-),
-
-                      
+),           
                     ],
                   ),
                 ],
