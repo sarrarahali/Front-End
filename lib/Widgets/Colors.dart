@@ -31,5 +31,7 @@ static HexColor localisation = HexColor('#FFC524');
 static HexColor localisationbg = HexColor('#FFF6EA');
 
 
+static HexColor trophy = HexColor('#F2F2F2');
+
 }
 

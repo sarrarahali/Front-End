@@ -14,28 +14,25 @@ class _buildStatistiquesState extends State<buildStatistiques> {
     int _selectedIndex = 0;
 
     final List<Map<String, double>> xValues = [
-      {"day 1": 80.0},
-      {"day 2": 50.0},
-      {"day 3": 30.0},
-      {"day 4": 50.0},
-      {"day 5": 10.0},
-      {"day 6": 0.0},
-      {"day 7": 100.0},
+      {"05 jan": 5},
+      {"10 jan": 30},
+      {"15 jan": 8},
+      {"18 jan": 30},
+     
+     
+     
     ];
 
-    // Define the Y axis values for the chart
-    // String will be text label and double will be value in the Map<String, double>
     final List<Map<String, double>> yValues = [
-      {"0": 0.0},
+     
+      {"10": 10.0},
       {"20": 20.0},
+      {"30": 30.0},
       {"40": 40.0},
-      {"60": 60.0},
-      {"80": 80.0},
-      {"100": 100.0},
+      
     ];
 
-    // Define the stroke width for the chart line
-    final  stroke = 2.0;
+    final  stroke = 3.5;
     
       
   @override
@@ -134,6 +131,7 @@ Row(
 ),
 const SizedBox(height: 30,),
 Card(
+   color: Colors.white,
   elevation: 5,
               margin: EdgeInsets.symmetric(vertical: 10),
               child: Padding(
@@ -150,9 +148,28 @@ Card(
 
  ],
       ),
-      
-    
      
+ SizedBox(height:30),  
+ Align(
+  alignment: Alignment.topLeft ,
+   child:Text("commande", style: TextStyle(fontSize: 15, color: Colors.grey,
+           ),),
+ ),
+Align(
+  alignment: Alignment.topLeft,  
+ child: Icon(Icons.circle , size: 10, color: Colors.amber,)
+ ),
+    CustomPaint(
+                  painter: CurvedChartPainter(
+                    xValues: xValues,
+                    yValues: yValues,
+                    strokeWidth: stroke,
+                   
+                  ),
+                   
+                  size: Size(250, 150),
+                ),
+     SizedBox(height:40)
   ],
 )
 
@@ -160,11 +177,8 @@ Card(
 ),
 
 
-
-
-
-
 Card(
+  color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -184,9 +198,16 @@ Card(
                      Column(
                       children: [
                         CircleAvatar(
-                          radius: 20,
-                          backgroundImage: AssetImage('images/trophy.png', ) ,
-                        ),
+                               radius: 20,
+                               backgroundColor: GlobalColors.trophy,
+                                child: ClipOval(
+                                child: Image.asset('images/trophy.png',
+                               width: 40, 
+                             height: 40, 
+        
+                                               ),
+                                      ),
+                             ),
                         SizedBox(height: 5.0),
                         Text('Lun'),
                       ],
@@ -194,21 +215,36 @@ Card(
 
                      Column(
                       children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage: AssetImage('images/trophy.png'),
-                        ),
+                             CircleAvatar(
+                               radius: 20,
+                               backgroundColor: GlobalColors.trophy,
+                                child: ClipOval(
+                                child: Image.asset('images/trophy.png',
+                               width: 40, 
+                             height: 40, 
+        
+                                               ),
+                                      ),
+                             ),
                         SizedBox(height: 5.0),
                         Text('Mard'),
                       ],
                     ),
 
+
                      Column(
                       children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage: AssetImage('images/trophy.png'),
-                        ),
+                                 CircleAvatar(
+                               radius: 20,
+                               backgroundColor: GlobalColors.trophy,
+                                child: ClipOval(
+                                child: Image.asset('images/trophy.png',
+                               width: 40, 
+                             height: 40, 
+        
+                                               ),
+                                      ),
+                             ),
                         SizedBox(height: 5.0),
                         Text('Merc'),
                       ],
@@ -216,10 +252,16 @@ Card(
 
                      Column(
                       children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage: AssetImage('images/trophy.png'),
-                        ),
+                       CircleAvatar(
+                               radius: 20,
+                               backgroundColor: GlobalColors.trophy,
+                                child: ClipOval(
+                                child: Image.asset('images/trophy.png',
+                               width: 40, 
+                             height: 40, 
+                                               ),
+                                      ),
+                             ),
                         SizedBox(height: 5.0),
                         Text('Jeudi'),
                       ],
@@ -229,9 +271,16 @@ Card(
                      Column(
                       children: [
                         CircleAvatar(
-                          radius: 20,
-                          backgroundImage: AssetImage('images/trophy.png'),
-                        ),
+                               radius: 20,
+                               backgroundColor: GlobalColors.trophy,
+                                child: ClipOval(
+                                child: Image.asset('images/trophy.png',
+                               width: 40, 
+                             height: 40, 
+        
+                                               ),
+                                      ),
+                             ),
                         SizedBox(height: 5.0),
                         Text('Vend'),
                       ],
@@ -239,10 +288,17 @@ Card(
 
                      Column(
                       children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundImage: AssetImage('images/trophy.png'),
-                        ),
+                       CircleAvatar(
+                               radius: 20,
+                               backgroundColor: GlobalColors.trophy,
+                                child: ClipOval(
+                                child: Image.asset('images/trophy.png',
+                               width: 40, 
+                             height: 40, 
+        
+                                               ),
+                                      ),
+                             ),
                         SizedBox(height: 5.0),
                         Text('Sam'),
                       ],
@@ -251,10 +307,15 @@ Card(
                      Column(
                       children: [
                         CircleAvatar(
-                          radius: 20,
-                          backgroundImage: AssetImage('images/trophy.png'),
-                          
-                        ),
+                               radius: 20,
+                               backgroundColor: GlobalColors.trophy,
+                                child: ClipOval(
+                                child: Image.asset('images/trophy.png',
+                               width: 40, 
+                             height: 40, 
+                                               ),
+                                      ),
+                             ),
                         SizedBox(height: 5.0),
                         Text('Dim'),
                       ],
