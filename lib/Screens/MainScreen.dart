@@ -36,6 +36,7 @@ class _MainScreenState extends State<MainScreen> {
       bottomNavigationBar: Container(
         height: 70,
         child: Row(
+          
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _NavigationDestination(
@@ -106,7 +107,7 @@ class _NavigationDestination extends StatelessWidget {
                 width: 8, 
                 height: 8, 
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
+                  shape: BoxShape.circle ,
                   color: GlobalColors.mainColor
                 ),
               ),

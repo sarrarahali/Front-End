@@ -19,7 +19,7 @@ class CurvedChartPainter extends CustomPainter {
   final List<Color> gradientColors;
   final List<double> gradientStops;
   final TextStyle labelTextStyle;
-   final image =  rootBundle.load('assets/trophy.png');
+   
   
 
 
@@ -128,11 +128,7 @@ class CurvedChartPainter extends CustomPainter {
     5, 
     Paint()..color = GlobalColors.mainColor,
   );
-  canvas.drawImage(
-    image, 
-    Offset(x - image.width / 2, size.height - (size.height * xValues[i].values.first / maxValue) - image.height),
-    Paint(),
-  );
+  
       }
 
      

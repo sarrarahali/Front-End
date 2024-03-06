@@ -6,6 +6,8 @@ class CustomIputField extends StatelessWidget {
   final String? hint;
   final TextInputType? keyboard;
   final  bool obscure ;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
 
   const CustomIputField({
   
@@ -14,6 +16,8 @@ class CustomIputField extends StatelessWidget {
     this.hint,
     this.keyboard,
      this.obscure = false,
+     this.validator,
+     this.onChanged,
     Key? key,
   }) : super(key: key);
 
@@ -44,7 +48,8 @@ class CustomIputField extends StatelessWidget {
             ),
             filled: true,
           ),
-          //validator: validator,
+          validator: validator,
+           onChanged: onChanged,
         )
       ],
     );
