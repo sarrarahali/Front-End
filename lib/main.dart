@@ -1,13 +1,19 @@
 
+import 'package:boy/Screens/LoginScreen.dart';
 import 'package:boy/Screens/MainScreen.dart';
 import 'package:boy/Screens/SplachScreen.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'firebase_options.dart';
+Future<void> main() async {
 
-void main(){
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp( options: DefaultFirebaseOptions.currentPlatform,
+);
  // WidgetsFlutterBinding.ensureInitialized();
  // await Firebase.initializeApp(); 
   runApp(const MyApp());
@@ -23,7 +29,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       //theme: ThemeData(
         //scaffoldBackgroundColor: GlobalColors.mainColor ),
-      home: MainScreen()
+      home: LoginScreen()
     );
   }
 }
