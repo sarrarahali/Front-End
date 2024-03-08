@@ -1,6 +1,8 @@
 
 import 'package:boy/Screens/LoginScreen.dart';
 import 'package:boy/Screens/MainScreen.dart';
+import 'package:boy/Screens/PasswordRecoveryScreen.dart';
+import 'package:boy/Screens/SendCodeScreen.dart';
 import 'package:boy/Screens/SplachScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -29,7 +31,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       //theme: ThemeData(
         //scaffoldBackgroundColor: GlobalColors.mainColor ),
-      home: LoginScreen()
+      home: PasswordRecoveryScreen()
     );
   }
 }

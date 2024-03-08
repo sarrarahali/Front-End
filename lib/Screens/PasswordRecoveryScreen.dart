@@ -1,7 +1,10 @@
+import 'package:boy/Screens/SendCodeScreen.dart';
 import 'package:boy/Widgets/Colors.dart';
 import 'package:boy/Widgets/CustomButton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
 import '../Widgets/CustomKeypad.dart';
@@ -14,6 +17,14 @@ class PasswordRecoveryScreen extends StatefulWidget {
 }
 
 class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
+  late TextEditingController phoneNumber = TextEditingController();
+
+ 
+
+ 
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+
   @override
   Widget build(BuildContext context) {
   
@@ -60,7 +71,7 @@ child: SingleChildScrollView(
         textAlign: TextAlign.center,
       ), 
       const SizedBox(height:40),
-     buildPhoneNumberInput(),
+     buildPhoneNumberInput( ),
      const SizedBox(height:20),
      const CustomKeypad(),
      const SizedBox(height:40),
@@ -69,7 +80,15 @@ child: SingleChildScrollView(
       child: CustomButton(
          onTap: () {   },
         title: "Envoyer",
-        onPressed: () {},
+        onPressed: () {
+  String phone = phoneNumber.text; // Get the phone number
+ Navigator.pushReplacement(
+  context,
+  MaterialPageRoute(builder: (context) => VerificationScreen2(phoneNumber.text)),
+);
+
+},
+
         color: GlobalColors.mainColor,
         borderRadius: 30,
       ),
@@ -95,9 +114,9 @@ Widget buildPhoneNumberInput() {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
         ),
       ),
-      const Expanded(
+       Expanded(
         child: TextField(
-         
+         controller: phoneNumber,
           decoration: InputDecoration(
          
           
@@ -108,6 +127,18 @@ Widget buildPhoneNumberInput() {
     ],
   );
 }
+
+
+
+
+
+void dispose(){
+  phoneNumber.dispose();
+}
+
+
+
+
 }
 
 
