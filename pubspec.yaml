@@ -40,7 +40,15 @@ dependencies:
   ionicons: ^0.2.2
   firebase_core: ^2.26.0
   firebase_auth: ^4.17.5
+  local_auth: ^2.2.0
+  
+  url_launcher: ^6.2.5
+  flutter_phone_direct_caller: ^2.1.1
+  
   fl_chart: ^0.66.2
+  pin_code_fields: ^8.0.1
+  firebase_ui_firestore: ^1.6.2
+  cloud_firestore: ^4.15.9
   syncfusion_flutter_sliders: ^24.2.7
   easy_stepper: ^0.8.3
   flutter_native_splash: ^2.3.10

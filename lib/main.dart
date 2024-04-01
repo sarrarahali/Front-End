@@ -1,9 +1,8 @@
 
-import 'package:boy/Screens/LoginScreen.dart';
+
+
 import 'package:boy/Screens/MainScreen.dart';
-import 'package:boy/Screens/PasswordRecoveryScreen.dart';
-import 'package:boy/Screens/SendCodeScreen.dart';
-import 'package:boy/Screens/SplachScreen.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 
 
@@ -16,8 +15,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp( options: DefaultFirebaseOptions.currentPlatform,
 );
- // WidgetsFlutterBinding.ensureInitialized();
- // await Firebase.initializeApp(); 
+
   runApp(const MyApp());
 }
 
@@ -27,11 +25,14 @@ class MyApp extends StatelessWidget {
  
   @override
   Widget build(BuildContext context) {
-    return  const GetMaterialApp (
+    return   GetMaterialApp (
       debugShowCheckedModeBanner: false,
-      //theme: ThemeData(
-        //scaffoldBackgroundColor: GlobalColors.mainColor ),
-      home: PasswordRecoveryScreen()
+
+      home:
+      MainScreen()
+      //Screen()
+  
+      
     );
   }
 }

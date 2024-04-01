@@ -1,3 +1,4 @@
+import 'package:boy/Screens/LoginScreen.dart';
 import 'package:boy/Widgets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:boy/Screens/PasswordRecoveryScreen.dart';
@@ -21,7 +22,7 @@ class _RememberPWState extends State<RememberPW> {
 
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const PasswordRecoveryScreen()),
+              MaterialPageRoute(builder: (context) => const LogInPage()),
             );
           },
           child: Text(
