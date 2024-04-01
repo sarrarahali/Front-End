@@ -1,5 +1,6 @@
 import 'package:boy/Screens/OrderDetailScreen.dart';
 import 'package:boy/Screens/PendingScreen.dart';
+import 'package:boy/Screens/map.dart';
 import 'package:flutter/material.dart';
 import 'package:boy/model/commande_model.dart';
 
@@ -19,7 +20,8 @@ class _MainPendingScreenState extends State<MainPendingScreen> {
         onGenerateRoute: (settings) {
           if (selectedIndex == 0) {
             return MaterialPageRoute(
-              builder: (context) => PendeingScreen() ,
+              
+              builder: (context) => PendeingScreen()
             );
           } else if (selectedIndex == 1) {
              Commande commande = Commande(

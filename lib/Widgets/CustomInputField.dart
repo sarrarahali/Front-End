@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomIputField extends StatelessWidget {
+  final Widget? suffixIcon;
   final String label;
   final TextEditingController? controller;
   final String? hint;
@@ -10,7 +11,7 @@ class CustomIputField extends StatelessWidget {
   final void Function(String)? onChanged;
 
   const CustomIputField({
-  
+  this.suffixIcon,
     required this.label,
     this.controller,
     this.hint,
@@ -41,6 +42,7 @@ class CustomIputField extends StatelessWidget {
           controller: controller,
           keyboardType: keyboard,
           decoration: InputDecoration(
+            suffixIcon: suffixIcon,
             fillColor: Color.fromARGB(255, 194, 192, 192),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100.0),

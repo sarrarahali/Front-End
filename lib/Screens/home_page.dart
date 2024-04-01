@@ -1,11 +1,13 @@
-// HomeScreen widget
+
+import 'package:boy/read.dart/getcommande.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:boy/Widgets/Colors.dart';
 import 'package:boy/Widgets/search.dart';
 import 'package:boy/Screens/OrderDetailScreen.dart';
 import 'package:boy/model/commande_model.dart';
 import 'package:ionicons/ionicons.dart';
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -14,10 +16,27 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //zidt athouma
+
+  final commande = FirebaseAuth.instance.currentUser;
+
+  List<String> docIDs = [];
+
+  // Function to get document IDs
+  Future<void> getDocId() async {
+   await FirebaseFirestore.instance.collection('commandes ').get().then((snapshot) => snapshot.docs.forEach((document) {
+    print(document.reference);
+    docIDs.add(document.reference.id);
+    }));
+   
+  }
+  //zidt athouma
+ 
   bool showPinView = false;
 
   @override
   Widget build(BuildContext context) {
+       CollectionReference commandes = FirebaseFirestore.instance.collection('commandes ');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -31,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               children: [
                 Expanded(
-                  child: !showPinView ? SearchWidget() : SizedBox(),
+                  child: !showPinView ? SearchWidget(): SizedBox(),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -102,6 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
+              
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -121,93 +141,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               Expanded(
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: dates.length,
-                  itemBuilder: (BuildContext context, int index) => Container(
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  '#${numid[index]} ${IDNP[index]}',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(width: 110),
-                                Text(
-                                  '${PRIX[index]}',
-                                  style: TextStyle(
-                                    color: GlobalColors.mainColorbg,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  'Pending ${dates[index]}',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      "à la livraison",
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    IconButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => OrderDetailsScreen(
-                                              index: index,
-                                              commande: Commande(
-                                                PRIX[index],
-                                                int.parse(numid[index]),
-                                                IDNP[index],
-                                                DateTime.now(),
-                                                details[index],
-                                                localisation[index],
-                                                KM[index],
-                                                time[index],
-                                                Comment[index],
-                                              ),
-                                              source: 'HomeScreen',
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      icon: Icon(
-                                        Ionicons.chevron_forward_outline,
-                                        color: GlobalColors.iconColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                 child: 
+                 FutureBuilder<void>(
+  future: getDocId(), 
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return CircularProgressIndicator(); // or any loading indicator
+    } else if (snapshot.hasError) {
+      return Text('Error: ${snapshot.error}');
+    } else {
+      return ListView.builder(
+        itemCount: docIDs.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: GetCommande(documentId: docIDs[index], fromHomepage: true),
+          );
+        },
+      );
+    }
+  }
+)
+
+              
               ),
             ],
           ],
@@ -217,4 +172,4 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// MainScreenhome widget
+

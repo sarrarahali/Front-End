@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CustomKeypad extends StatefulWidget {
-  const CustomKeypad({Key? key}) : super(key: key);
+    final Function(String) onButtonPressed;
+  const CustomKeypad({Key? key,  required this.onButtonPressed}) : super(key: key);
 
   @override
   State<CustomKeypad> createState() => _CustomKeypadState();
@@ -79,14 +80,15 @@ class _CustomKeypadState extends State<CustomKeypad> {
     );
   }
 
-  Widget _buildKeypadButton(String text, {IconData? icon, Function()? onPressed}) {
-    return IconButton(
-      onPressed: onPressed != null
-          ? onPressed
-          : () {
-              _phoneNumberController.text += text;
-            },
-      icon: icon != null ? Icon(icon) : Text(text, style: TextStyle(fontSize: 30)),
-    );
-  }
+Widget _buildKeypadButton(String text, {IconData? icon, Function()? onPressed}) {
+  return IconButton(
+    onPressed: onPressed != null
+        ? onPressed
+        : () {
+            widget.onButtonPressed(text); // Invoke the callback function
+          },
+    icon: icon != null ? Icon(icon) : Text(text, style: TextStyle(fontSize: 30)),
+  );
 }
+}
+
