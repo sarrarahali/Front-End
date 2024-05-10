@@ -1,4 +1,4 @@
-import 'package:boy/Widgets/Colors.dart';
+/*import 'package:boy/Widgets/Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -140,3 +140,25 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 }
+*/
+import 'dart:io';
+
+
+import 'package:flutter/material.dart';
+
+class notification extends StatefulWidget {
+  const notification({super.key});
+
+  @override
+  State<notification> createState() => _notificationState();
+}
+
+class _notificationState extends State<notification> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+    
+    );
+ }
+}
+

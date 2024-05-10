@@ -9,7 +9,13 @@ class MainPendingScreen extends StatefulWidget {
   @override
   State<MainPendingScreen> createState() => _MainPendingScreenState();
 }
-
+void acceptCommand(String documentId) {
+  
+  print('Command accepted with documentId: $documentId');
+}
+void refuseCommand(String documentId) {
+  print('Command refused with documentId: $documentId');
+}
 class _MainPendingScreenState extends State<MainPendingScreen> {
   int selectedIndex = 0;
 
@@ -20,8 +26,10 @@ class _MainPendingScreenState extends State<MainPendingScreen> {
         onGenerateRoute: (settings) {
           if (selectedIndex == 0) {
             return MaterialPageRoute(
-              
-              builder: (context) => PendeingScreen()
+              builder: (context) => PendingScreen(
+                acceptCommand: acceptCommand,
+                refuseCommand: refuseCommand, // Pass refuseCommand here
+              ),
             );
           } else if (selectedIndex == 1) {
              Commande commande = Commande(

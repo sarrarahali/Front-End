@@ -1,32 +1,61 @@
-import 'package:boy/Screens/OrderDetailScreen.dart';
+
+
+
+import 'package:boy/Screens/PendingScreen.dart';
 import 'package:boy/Screens/aa.dart';
 import 'package:boy/Widgets/Colors.dart';
-import 'package:boy/Widgets/Easystepper.dart';
-import 'package:boy/model/commande_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:boy/read.dart/getcommande.dart';
+import 'package:boy/Widgets/Easystepper.dart';
 import 'package:ionicons/ionicons.dart';
 
 class GetCommande extends StatelessWidget {
   final String documentId;
-  final bool fromHomepage; // Add this parameter
+  final bool fromHomepage;
 
   GetCommande({Key? key, required this.documentId, required this.fromHomepage}) : super(key: key);
+  int currentIndex = 0; // Index of the currently displayed order
+
+  List<String> orderIds = []; // List of order ids, you can populate this with order ids
+  void acceptCommand(String documentId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('commandes ')
+          .doc(documentId)
+          .update({'status': 'Ontheway'});
+      print('Command accepted successfully!');
+    } catch (e) {
+      print('Error accepting command: $e');
+    }
+  }
+void refuseCommand(String documentId) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection('commandes ')
+        .doc(documentId)
+        .update({'status': 'Refused'});
+    print('Command refused successfully!');
+  } catch (e) {
+    print('Error refusing command: $e');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
     CollectionReference commandes = FirebaseFirestore.instance.collection('commandes ');
+
     return FutureBuilder<DocumentSnapshot>(
       future: commandes.doc(documentId).get(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData && snapshot.data!.exists) {
             Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-            return Card(
-               shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+            return 
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
               margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
               child: Column(
                 children: <Widget>[
@@ -36,7 +65,7 @@ class GetCommande extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          "# ${data['ID']} " + "${data['NomPrenom'].toUpperCase()} ",
+                          "# ${data['ID']} " + "${data['NomPrenom']}",
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -58,19 +87,22 @@ class GetCommande extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          fromHomepage ? "Pending on ${data['Date']}" : "Arrived on ${data['Date']}", // Conditional text display
+                          " ${data['status']}" + " ${data['Date']}",
                           style: TextStyle(color: Colors.black),
                         ),
-                       /* Text(
-                                      "à la livraison",
-                                      style: TextStyle(color: Colors.black),
-                                    ),*/
-                      IconButton(
+                        IconButton(
   onPressed: () {
+    // Navigate to the command details page and pass necessary parameters
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CommandDetailsPage(data: data, source: fromHomepage ? 'HomeScreen' : 'PendeingScreen'),
+        builder: (context) => CommandDetailsPage(
+          data: data, // Provide the data for the order
+          acceptCommand: acceptCommand, 
+          refuseCommand:refuseCommand,// Provide the acceptCommand function
+          documentId: documentId, // Provide the documentId of the order
+          source: 'HomeScreen', // Specify the source
+        ),
       ),
     );
   },
@@ -80,167 +112,16 @@ class GetCommande extends StatelessWidget {
   ),
 ),
 
-
-                         
                         
                       ],
                     ),
                   ),
-                  if (!fromHomepage) easy_stepper(), // Display stepper only if not from homepage
-                ],
-              ),
-            );
-          } else {
-            return Text("Document does not exist.");
-          }
-        }
-        return CircularProgressIndicator();
-      },
-    );
-  }
-}
-
-
-
-
-
-
-
-
-/*import 'package:flutter/material.dart';
-import 'package:boy/model/commande_model.dart';
-import 'package:boy/Widgets/Colors.dart';
-import 'package:boy/Widgets/CustomButton.dart';
-import 'package:ionicons/ionicons.dart';
-import 'package:animated_custom_dropdown/custom_dropdown.dart'; // Corrected import statement
-
-class OrderDetailsScreen extends StatefulWidget {
-  final int index;
-  final Commande commande;
-  final String source;
-
-  const OrderDetailsScreen({
-    Key? key,
-    required this.index,
-    required this.commande,
-    required this.source,
-  }) : super(key: key);
-
-  @override
-  State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
-}
-
-class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
-   
-
-  final List<String> _list = [
-    'pending',
-    'on my why ',
-    'arrived',
-    'processing',
-    'confirm',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    Commande commande = widget.commande;
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    "ORDER DETAILS",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: GlobalColors.childmainColor,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: IconButton(
-                      onPressed: () {},
-                      color: GlobalColors.childmainColor,
-                      icon: Image.asset(
-                        "images/phone.png",
-                        color: GlobalColors.mainColor,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: GlobalColors.childmainColor,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Image.asset("images/pin-icon.png"),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 50),
-            Card(
-              elevation: 5,
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          commande.nomprenom,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 17,
-                          ),
-                        ),
-                        Text(
-                          "à la livraison",
-                          style: TextStyle(color: Colors.black, fontSize: 17),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 30),
-                    Row(
-                      children: [
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: Color.fromARGB(255, 214, 249, 215),
-                          ),
-                          child: Icon(Icons.check, color: GlobalColors.stepper),
-                        ),
-                        SizedBox(width: 5),
-                        Text(commande.details, style: TextStyle(color: Colors.black, fontSize: 15)),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      children: [
+                   if (!fromHomepage)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
                         Container(
                           width: 40,
                           height: 40,
@@ -250,191 +131,35 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           ),
                           child: Icon(Ionicons.location_outline, color: GlobalColors.localisation),
                         ),
-                        SizedBox(width: 5),
-                        Text(
-                          commande.localisation,
-                          style: TextStyle(color: Colors.black, fontSize: 15),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Image.asset("images/tag.png"),
-                        SizedBox(width: 5),
-                        Text(
-                          commande.prix,
-                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                        SizedBox(width: 90),
-                        Image.asset("images/time-icon.png"),
-                        SizedBox(width: 5),
-                        Text(
-                          commande.time,
-                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                        SizedBox(width: 70),
-                        Image.asset("images/map-location.png"),
-                        SizedBox(width: 5),
-                        Text(
-                          commande.KM,
-                          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Card(
-              elevation: 5,
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Comment",
-                      style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      commande.Comment,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(color: Colors.black, fontSize: 17),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            if (widget.source == 'PendeingScreen') ...[
-              CustomDropdown<String>(
-               decoration: CustomDropdownDecoration(
-                closedBorder: Border.all(color: GlobalColors.mainColor)
-               ),
-                items: _list,
-                initialItem: _list[0],
-                onChanged: (value) {
-                  debugPrint('changing value to: $value', );
-                },
-              ),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: CustomButton(
-                      title: "Register",
-                      onPressed: () {
-                       showDialog(
-  context: context,
-  builder: (context) {
-    // Get the size of the screen
-    Size screenSize = MediaQuery.of(context).size;
-    return AlertDialog(
-        shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16.0), // Adjust the border radius as needed
-    ),
-      contentPadding: EdgeInsets.all(10), // Remove padding
-      content: Container(
-        width: screenSize.width * 0.9,
-        height: screenSize.height * 0.3, 
-        child: Column(
-           
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).pop(); // Close the dialog
-                },
-                child: Icon(Icons.close), // Close icon
-              ),
-            ),
-            SizedBox(height: 8), // Adjust the space between the close icon and content
-            Text(
-              'Place the order to delivery',
-              style: TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 8), // Adjust the space between the title and content
-            Text(
-              "Are you sure about this step?",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13),
-            ),
-            // Adjust the space between the content and button
-             SizedBox(height: 40),
-         
-                CustomButton(
-                  title: "Register",
-                  onPressed: () {},
-                  color: GlobalColors.AcceptButton,
-                  onTap: () {},
-                ),
-             
-          ],
+                        SizedBox(width:8.0),
+                        Flexible(
+        child: Text(
+          "${data['Localisation']}",
+          style: TextStyle(fontSize: 16.0), // Adjust font size as needed
+          overflow: TextOverflow.ellipsis, // Specify how to handle overflow
+          maxLines: 3, // Specify maximum number of lines before truncating with ellipsis
         ),
       ),
-    );
-  },
-);
-
-
-                      },
-                      color: GlobalColors.AcceptButton,
-                      borderRadius: 30,
-                      onTap: () {},
+                          
+                         
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    flex: 2,
-                    child: CustomButton(
-                      title: "Close",
-                      onPressed: () {},
-                      color: GlobalColors.RefuseButton,
-                      onTap: () {},
-                    ),
-                  ),
                 ],
               ),
-            ],
-            if (widget.source == 'HomeScreen') ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: CustomButton(
-                      title: "Accepter",
-                      onPressed: () {},
-                      color: GlobalColors.AcceptButton,
-                      borderRadius: 30,
-                      onTap: () {},
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    flex: 2,
-                    child: CustomButton(
-                      title: "Refuser",
-                      onPressed: () {},
-                      color: GlobalColors.RefuseButton,
-                      onTap: () {},
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
-*/
+            
+            );
+          } else {
+            return Text("Document does not exist.");
+          }
+        }
+        return CircularProgressIndicator()
+        ;
+      });}
+      }
+  
+
+
+
+
+

@@ -2,6 +2,7 @@
 import 'package:boy/Screens/NotificationSceen.dart';
 import 'package:boy/Screens/PendingScreen.dart';
 import 'package:boy/Screens/Profile/Screen/ProfileScreen.dart';
+import 'package:boy/Screens/home_page.dart';
 import 'package:boy/Screens/homependeingScreen.dart';
 import 'package:boy/Screens/mainhome_Screen.dart';
 
@@ -22,10 +23,12 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0; 
   final List<Widget> _screens = [
     
-    
-   MainScreenhome(),
+    HomeScreen(),
+   
+
    MainPendingScreen(),
-    NotificationScreen(),
+   notification(),
+  
     ProfilScreen(),
   ];
 

@@ -1,5 +1,39 @@
 import 'package:flutter/material.dart';
+class SearchWidget extends StatefulWidget {
+  const SearchWidget({Key? key}) : super(key: key);
 
+  @override
+  State<SearchWidget> createState() => _SearchWidgetState();
+}
+
+class _SearchWidgetState extends State<SearchWidget> {
+  TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+        color: Colors.white,
+        border: Border.all(color: Colors.grey),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: TextField(
+        controller: _controller,
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          // Notify the parent widget about the search query
+          // You can use a callback function passed from the parent widget to handle this
+        },
+        decoration: InputDecoration(
+          icon: Icon(Icons.search, color: Colors.black),
+          hintText: "Chercher N° commande",
+        ),
+      ),
+    );
+  }
+}
+/*
 class SearchWidget extends StatefulWidget {
   const SearchWidget({super.key});
 
@@ -33,7 +67,7 @@ child:const TextField(
   }
 }
 
-/*
+
 -----------------------
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

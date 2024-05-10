@@ -18,11 +18,11 @@ class _RememberPWState extends State<RememberPW> {
       children: [
         Container(),
         GestureDetector(
-          onTap: () {
+         onTap: () {
 
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const LogInPage()),
+              MaterialPageRoute(builder: (context) => const PasswordRecoveryScreen()),
             );
           },
           child: Text(

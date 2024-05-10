@@ -170,16 +170,9 @@ final LocalAuthentication auth = LocalAuthentication();
                         const Padding(padding: EdgeInsets.symmetric(vertical: 60)),
                         CustomIputField (
                           label: 'Numéro ID',
-                          keyboard: TextInputType.emailAddress ,
+                          keyboard: TextInputType.phone,
                           controller: _IDController,
-                          /*validator: (String? value) {
-                            if (value == null || value.isEmpty) {
-                              return "Please enter your ID";
-                            } else if (value.length != 8) {
-                              return "ID must be 8 characters long";
-                            }
-                            return null;
-                          },*/
+                          
                           onChanged: (String value) {
                             setState(() => _ID = value);
                           },
@@ -248,7 +241,17 @@ final LocalAuthentication auth = LocalAuthentication();
   }
 }
 
-/*import 'package:boy/Screens/MainScreen.dart';
+/*
+/*validator: (String? value) {
+                            if (value == null || value.isEmpty) {
+                              return "Please enter your ID";
+                            } else if (value.length != 8) {
+                              return "ID must be 8 characters long";
+                            }
+                            return null;
+                          },*/
+
+import 'package:boy/Screens/MainScreen.dart';
 import 'package:boy/Screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
