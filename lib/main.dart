@@ -2,6 +2,11 @@
 
 
 import 'package:boy/Screens/MainScreen.dart';
+import 'package:boy/Screens/PasswordRecoveryScreen.dart';
+import 'package:boy/Screens/SendCodeScreen.dart';
+import 'package:boy/Screens/SplachScreen.dart';
+import 'package:boy/Screens/home_page.dart';
+import 'package:boy/Screens/map.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 
@@ -28,9 +33,13 @@ class MyApp extends StatelessWidget {
     return   GetMaterialApp (
       debugShowCheckedModeBanner: false,
 
-      home:
-      MainScreen()
-      //Screen()
+      home: 
+     // OTPPage( verificationId: '',isTimeOut2: true, )
+
+   Spalch()
+      
+     //MapScreen()
+   //MainScreen()
   
       
     );

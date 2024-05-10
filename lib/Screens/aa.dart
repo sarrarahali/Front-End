@@ -1,44 +1,51 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:boy/Screens/PendingScreen.dart';
-import 'package:boy/Widgets/Colors.dart';
-import 'package:boy/Widgets/CustomButton.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:boy/Screens/map.dart';
+import 'package:get/get_connect/http/src/request/request.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:boy/Widgets/Colors.dart';
+import 'package:boy/Widgets/CustomButton.dart';
 
 class CommandDetailsPage extends StatelessWidget {
   final Map<String, dynamic> data;
-  final String source; // New parameter to determine the source
+  final Function(String) acceptCommand;
+   final Function(String) refuseCommand; // Add this callback
+  final String documentId;
+  final String source;
 
-  final List<String> _list = [
-    'pending',
-    'on my why ',
-    'arrived',
-    'processing',
-    'confirm',
-  ];
+  const CommandDetailsPage({
+    Key? key,
+    required this.data,
+    required this.acceptCommand,
+    required this.refuseCommand,
+    required this.documentId,
+    required this.source,
+    
+  }) : super(key: key);
 
-  CommandDetailsPage({Key? key, required this.data, required this.source}) : super(key: key);
   
-
+  
 
   @override
   Widget build(BuildContext context) {
+    String dropdownValue = 'Delivered'; // Default value
+    String popupPhrase = 'Place the order to delivery'; // Default phrase
+
     return Scaffold(
-       appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: 
-      Padding(
+      body: Padding(
         padding: EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-           
             SizedBox(height: 10),
-             Row(
+            Row(
               children: [
                 Expanded(
                   child: Text(
@@ -50,6 +57,7 @@ class CommandDetailsPage extends StatelessWidget {
                     ),
                   ),
                 ),
+                // Phone call icon
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Container(
@@ -70,7 +78,6 @@ class CommandDetailsPage extends StatelessWidget {
                         }
         
           },
-          
                       color: GlobalColors.childmainColor,
                       icon: Image.asset(
                         "images/phone.png",
@@ -79,6 +86,7 @@ class CommandDetailsPage extends StatelessWidget {
                     ),
                   ),
                 ),
+                // Pin location icon
                 Container(
                   decoration: BoxDecoration(
                     color: GlobalColors.childmainColor,
@@ -90,9 +98,9 @@ class CommandDetailsPage extends StatelessWidget {
                   ),
                 ),
               ],
-              
             ),
-          SizedBox(height:50),
+            SizedBox(height: 30),
+            // Order details card
             Card(
               elevation: 5,
               margin: EdgeInsets.symmetric(vertical: 10),
@@ -101,11 +109,12 @@ class CommandDetailsPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    // Order ID and Name
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "# ${data['ID']}" + " ${data['NomPrenom'].toUpperCase()}",
+                          "# ${data['ID']}" + " ${data['NomPrenom']}",
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -119,6 +128,7 @@ class CommandDetailsPage extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 30),
+                    // Order details
                     Row(
                       children: [
                         Container(
@@ -131,11 +141,11 @@ class CommandDetailsPage extends StatelessWidget {
                           child: Icon(Icons.check, color: GlobalColors.stepper),
                         ),
                         SizedBox(width: 8),
-                        Flexible(child:   Text("${data['Details']}", style: TextStyle(color: Colors.black, fontSize: 15)), )
-                     
+                        Flexible(child: Text("${data['Details']}", style: TextStyle(color: Colors.black, fontSize: 15))),
                       ],
                     ),
                     SizedBox(height: 20),
+                    // Location
                     Row(
                       children: [
                         Container(
@@ -148,16 +158,17 @@ class CommandDetailsPage extends StatelessWidget {
                           child: Icon(Ionicons.location_outline, color: GlobalColors.localisation),
                         ),
                         SizedBox(width: 8),
-                        Flexible( // Use Flexible to allow wrapping
-      child: Text(
-        "${data['Localisation']}",
-        textAlign: TextAlign.left,
-        style: TextStyle(color: Colors.black, fontSize: 15),
-      ),
-    ),
+                        Flexible(
+                          child: Text(
+                            "${data['Localisation']}",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(color: Colors.black, fontSize: 15),
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(height: 10),
+                    // Price, Time, and Distance
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -187,6 +198,7 @@ class CommandDetailsPage extends StatelessWidget {
                 ),
               ),
             ),
+            // Comment card
             Card(
               elevation: 5,
               margin: EdgeInsets.symmetric(vertical: 10),
@@ -209,35 +221,44 @@ class CommandDetailsPage extends StatelessWidget {
                 ),
               ),
             ),
-           
             SizedBox(height: 20),
-
-            // Display additional UI based on the source
+            // Display buttons based on source
             if (source == 'HomeScreen') ...[
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     flex: 2,
-                    child: CustomButton(
-  title: "Accepter",
-  onPressed: () {
-    
-  },
-  color: GlobalColors.AcceptButton,
-  borderRadius: 30,
-  onTap: () {},
-),
+                    child:CustomButton(
+                      title: "Accepter",
+                   onPressed: () {
+  acceptCommand(documentId); // Only accept the command without changing its status
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => PendingScreen(acceptCommand: acceptCommand, refuseCommand: refuseCommand,),
+    ),
+  );
+},
 
+  
+                      color: GlobalColors.AcceptButton,
+                      onTap: () {},
+                    ),
+                    
+              
 
                   ),
+      
                   SizedBox(width: 10),
                   Expanded(
                     flex: 2,
                     child: CustomButton(
                       title: "Refuser",
-                      
-                      onPressed: () {},
+                      onPressed: () {
+                refuseCommand(documentId); // Call the callback with the documentId
+                Navigator.pop(context); // Close the details page
+              },
                       color: GlobalColors.RefuseButton,
                       onTap: () {},
                     ),
@@ -245,21 +266,26 @@ class CommandDetailsPage extends StatelessWidget {
                 ],
               ),
             ],
-            
-if (source == 'PendeingScreen') ...
-
-       [
+            if (source == 'PendingScreen') ...[
               CustomDropdown<String>(
                 decoration: CustomDropdownDecoration(
                   closedBorder: Border.all(color: GlobalColors.mainColor),
                 ),
-                items: _list,
-                initialItem: _list[0],
-                onChanged: (value) {
-                  debugPrint('changing value to: $value');
-                },
+               items: ['canclled', 'Delivred'],
+                initialItem: 'Delivred',
+              onChanged: (value) {
+  dropdownValue = value; // Update dropdownValue
+  if (value == 'canclled') {
+    popupPhrase = 'Cancel the order please';
+  } else {
+    popupPhrase = 'Place the order to delivery';
+  }
+  debugPrint('changing value to: $value');
+},
+
+
               ),
-              SizedBox(height: 10),
+           
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -268,21 +294,126 @@ if (source == 'PendeingScreen') ...
                     child: CustomButton(
                       title: "Register",
                       onPressed: () {
-                        // Show dialog
+                       showDialog(
+  context: context,
+  builder: (context) {
+    // Get the size of the screen
+    Size screenSize = MediaQuery.of(context).size;
+    return AlertDialog(
+        shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(16.0), // Adjust the border radius as needed
+    ),
+      contentPadding: EdgeInsets.all(10), // Remove padding
+      content: Container(
+        width: screenSize.width * 0.9,
+        height: screenSize.height * 0.3, 
+        child: Column(
+           
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Icon(Icons.close), // Close icon
+              ),
+            ),
+            SizedBox(height: 8), // Adjust the space between the close icon and content
+            Text(
+  popupPhrase,
+  style: TextStyle(fontSize: 16),
+  textAlign: TextAlign.center,
+),
+
+           SizedBox(height: 8), // Adjust the space between the title and content
+            Text(
+              "Are you sure about this step?",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 13),
+            ),
+            // Adjust the space between the content and button
+             SizedBox(height: 40),
+         
+                CustomButton(
+                  title: "Register",
+                 onPressed: () async {
+                        // Determine if the order is being canceled or delivered
+                        if (dropdownValue == 'canclled') {
+                          // Save order information to CancelledOrders collection
+                          await FirebaseFirestore.instance.collection('CancelledOrders').doc(documentId).set({
+                            'ID': data['ID'],
+                            'NomPrenom': data['NomPrenom'],
+                            'DateCancelled': Timestamp.now(), // Current date and time
+                          });
+
+                          // Show success message
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('The order has been canceled successfully.'),
+                            duration: Duration(seconds: 2),
+                          ));
+                        } else {
+                          // Save order information to DeliveredOrders collection
+await FirebaseFirestore.instance.collection('DeliveredOrders').doc(documentId).set({
+  'ID': data['ID'],
+  'NomPrenom': data['NomPrenom'],
+  'DateDelivered': Timestamp.now(), // Current date and time
+});
+
+// Show success message if the context is still valid
+if (Navigator.canPop(context)) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: Text('The order has been delivered successfully.'),
+    duration: Duration(seconds: 2),
+  ));
+}
+
+                          
+                          
+                                      
+                                      }
+                                       // Use another delay before navigating back to the pending screen
+    await Future.delayed(Duration(seconds: 2)); // Adjust delay duration as needed
+
+    // Navigate back to the pending screen
+    Navigator.pop(context);
+
+                     
+                                    },
+                                    
+                                    color: GlobalColors.AcceptButton,
+                                    onTap: () {},
+                                    
+                ),
+             
+          ],
+        ),
+      ),
+    );
+  },
+);
+
+
                       },
                       color: GlobalColors.AcceptButton,
                       borderRadius: 30,
                       onTap: () {},
                     ),
+                  
+
+                  
                   ),
                   const SizedBox(width: 10),
                   Expanded(
                     flex: 2,
                     child: CustomButton(
                       title: "Close",
-                      onPressed: () {
-                        
-                      },
+                                onPressed: () {
+            Navigator.pop(context); // Navigate back to the pending screen
+          },
+
+                      //onPressed: () {},
                       color: GlobalColors.RefuseButton,
                       onTap: () {},
                     ),
@@ -295,9 +426,7 @@ if (source == 'PendeingScreen') ...
       ),
     );
   }
-  
 }
-
 
 
 /*import 'package:boy/Widgets/Colors.dart';

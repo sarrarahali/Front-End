@@ -1,15 +1,20 @@
+
 import 'package:boy/Widgets/Colors.dart';
 import 'package:easy_stepper/easy_stepper.dart';
 import 'package:flutter/material.dart';
 
+
 class easy_stepper extends StatefulWidget {
-  const easy_stepper({super.key});
+   final Function(status) onStatusChanged;
+
+  const easy_stepper({super.key,required this.onStatusChanged});
 
   @override
   State<easy_stepper> createState() => _easy_stepperState();
 }
-
+ enum status {pending, Ontheway ,  Arrived, processing ,Confirm}
 class _easy_stepperState extends State<easy_stepper> {
+  
   var activeStep = 0;
   @override
   Widget build(BuildContext context) {
@@ -46,7 +51,9 @@ class _easy_stepperState extends State<easy_stepper> {
 
               ),
             ),
-            title: 'Pending',
+            
+            title: status.pending.toString().split('.').last,
+            
           ),
 
           EasyStep(
@@ -65,7 +72,7 @@ class _easy_stepperState extends State<easy_stepper> {
                      ),
               ),
             ),
-            title: 'On the way',
+            title: status.Ontheway.toString().split('.').last,
            
           ),
         
@@ -83,7 +90,7 @@ class _easy_stepperState extends State<easy_stepper> {
             )),
               ),
             ),
-            title: 'Arrived',
+            title: status.Arrived.toString().split('.').last ,
           ),
           EasyStep(
             customStep: CircleAvatar(
@@ -101,7 +108,7 @@ class _easy_stepperState extends State<easy_stepper> {
             )),
               ),
             ),
-            title: 'processing',
+           title: status.processing.toString().split('.').last,
             
           ),
           EasyStep(
@@ -118,11 +125,18 @@ class _easy_stepperState extends State<easy_stepper> {
             )),
               ),
             ),
-            title: 'Confirm',
+            title: status.Confirm.toString().split('.').last,
           ),
         ],
-        onStepReached: (index) =>
-            setState(() => activeStep = index),
+       
+            onStepReached: (index) {
+        setState(() {
+          activeStep = index;
+        });
+
+        // Notify the parent widget about the status change
+        widget.onStatusChanged(status.values[index]);
+      },
     );
   }
 }
