@@ -1,8 +1,8 @@
 
-
 import 'dart:async';
 
 import 'package:boy/Screens/MainScreen.dart';
+import 'package:boy/Widgets/Colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -60,64 +60,34 @@ void dispose() {
   Widget build(BuildContext context) {
        mediaSize = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.amber,
+      backgroundColor: GlobalColors.mainColorbg ,
       body: Stack(
         children: [
-          Positioned(
-            top: 80,
-            child: _buildTop(),
+          Container(
+            child: const Padding(padding: EdgeInsets.only(top: 200, left: 200)),
+            decoration: const BoxDecoration(image: const DecorationImage(image: AssetImage("images/logoshort.png"))),
           ),
-          Positioned(
-            bottom: 0,
-            child: _buildBottom(),
-          ),
-        ],
-      ),
-    );
-  }
-    
-   Widget _buildTop() {
-    return SizedBox(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          
-        ],
-      ),
-    );
-  }
-    
-    void cancelOperations() {
-    // Cancel any ongoing asynchronous operations here
-  }
-
-    Widget _buildBottom() {
-    return SizedBox(
-      width: mediaSize.width,
-      child: Card(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(40),
-            topRight: Radius.circular(40),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "VÉRIFICATION CODE",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontWeight: FontWeight.w800,
+          Padding(
+            padding: const EdgeInsets.only(top: 150),
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+                color: Colors.white,
+              ),
+              height: double.infinity,
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 18.0, right: 18),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 20),
+                      const Text(
+                        "VÉRIFICATION CODE",
+                        style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w900),
                       ),
-                    ),
+                      
                     Padding(padding: EdgeInsets.all(40)),
                     
                   
@@ -139,24 +109,24 @@ void dispose() {
                       }
                     },
                     pinTheme: PinTheme(
-                      shape: PinCodeFieldShape.box,
-                      borderRadius: BorderRadius.circular(5),
+                      
                       fieldHeight: 50,
                       fieldWidth: 40,
-                      activeFillColor: Colors.white,
-                      inactiveFillColor:Colors.white,
+                      //activeFillColor: GlobalColors.text,
+                            // inactiveFillColor: Colors.black,
+                             // selectedFillColor: Colors.black,
+                              activeColor:GlobalColors.text,
+                              inactiveColor: GlobalColors.text,
+                              selectedColor: GlobalColors.text,
+                     
                     ),
-                    cursorColor: Colors.black,
+                    
                     animationDuration: Duration(milliseconds: 300),
-                    errorAnimationController: errorController,
+                   errorAnimationController: errorController,
                     controller: otpController,
                     keyboardType: TextInputType.number,
                     boxShadows: [
-                      BoxShadow(
-                        offset: Offset(0, 1),
-                        color: const Color.fromARGB(255, 214, 11, 11),
-                        blurRadius: 10,
-                      )
+                     
                     ],
                     onCompleted: (v) {
                         _verifyOTP(v);
@@ -164,57 +134,58 @@ void dispose() {
                     
                   )),
             ),
-              
-
                     const SizedBox(height: 10),
-                    
-                    
                      Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Didn't receive the code? ",
+                  "échec d'envoie ?",
                   style: TextStyle(color: Colors.black54, fontSize: 15),
                 ),
-                TextButton(
-                    onPressed: isTimeOut ? () async {
-                      setState(() {
-                        isTimeOut =  false;
-                      });
-                      await FirebaseAuth.instance.verifyPhoneNumber(
-                    
-                        verificationCompleted: (PhoneAuthCredential credential) {},
-                        verificationFailed: (FirebaseAuthException e) {
-                          setState(() {
-                            showLoading = false;
-                          });
-                          setState(() {
-                            verificationFailedMessage = e.message ?? "error!";
-                          });
-                        },
-                        codeSent: (String verificationId, int? resendToken) {
-                          setState(() {
-                            showLoading = false;
-                            myVerificationId = verificationId;
-                          });
-                        },
-                        timeout: const Duration(seconds: 10),
-                        codeAutoRetrievalTimeout: (String verificationId) {
-                          setState(() {
-                            isTimeOut =  true;
-                          });
-                        },
-                      );
-                    } : null,
-                    child: Text(
-                      "RESEND",
-                      style: TextStyle(
-                          color: Color(0xFF91D3B3),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
-                    ))
+               TextButton(
+  onPressed: () async {
+    try {
+      // Resetting any previous error message
+      setState(() {
+        verificationFailedMessage = "";
+      });
+
+      // Resend OTP logic
+      await FirebaseAuth.instance.verifyPhoneNumber(
+       
+        timeout: Duration(seconds: 60), // Timeout duration
+        verificationCompleted: (PhoneAuthCredential credential) {},
+        verificationFailed: (FirebaseAuthException e) {
+          setState(() {
+            verificationFailedMessage = e.message ?? "Error!";
+          });
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          setState(() {
+            myVerificationId = verificationId;
+          });
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+    } catch (e) {
+      print("Error resending OTP: $e");
+      // Handle any errors here
+    }
+  },
+  child: Text(
+    "Cliquer ici",
+    style: TextStyle(
+      color: GlobalColors.mainColor,
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    ),
+  ),
+)
+
+
               ],
             ),
+            
             _buildCustomKeypad(),
             SizedBox(
               height: 14,
@@ -233,15 +204,20 @@ void dispose() {
           ],
         ),
       )
-          
+              )
+            )
+          )
             ]
           )
-        )
-      )
+        );
+      
     
-   );
+  
 
     }
+
+
+
     Widget _buildCustomKeypad() {
   return Container(
     alignment: Alignment.center,
@@ -279,11 +255,11 @@ void dispose() {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween, // Adjust alignment
           children: [
-            SizedBox(width: 70), // Add space for alignment
+            SizedBox(width: 50), // Add space for alignment
             _buildKeypadButton('0'),
             _buildKeypadButton(
               '',
-              icon: Icons.backspace,
+              icon: Icons.backspace_outlined,
               onPressed: () {
                 if (otpController.text.isNotEmpty) {
                   otpController.text =otpController .text
@@ -304,7 +280,7 @@ void dispose() {
           : () {
               otpController.text += text;
             },
-      icon: icon != null ? Icon(icon) : Text(text, style: TextStyle(fontSize: 30)),
+      icon: icon != null ? Icon(icon, color: Colors.grey) : Text(text, style: TextStyle(fontSize: 30)),
     );
     
   }

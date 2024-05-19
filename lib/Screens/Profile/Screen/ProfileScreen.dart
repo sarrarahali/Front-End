@@ -77,6 +77,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                               child: Text(
                                 "Information",
                                 style: TextStyle(
+                                  fontSize: 13,
                                   color: _selectedIndex == 0
                                       ? Colors.white
                                       : Colors.grey,
@@ -100,6 +101,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                               child: Text(
                                 "Historique",
                                 style: TextStyle(
+                                  fontSize: 13,
                                   color: _selectedIndex == 1
                                       ? Colors.white
                                       : Colors.grey,
@@ -123,6 +125,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                               child: Text(
                                 "Statistiques",
                                 style: TextStyle(
+                                  fontSize: 12,
                                   color: _selectedIndex == 2
                                       ? Colors.white
                                       : Colors.grey,

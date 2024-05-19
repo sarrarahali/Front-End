@@ -141,24 +141,84 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 }
 */
-import 'dart:io';
-
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-class notification extends StatefulWidget {
-  const notification({super.key});
+/*class notification extends StatefulWidget {
+  const notification({Key? key}) : super(key: key);
 
   @override
-  State<notification> createState() => _notificationState();
+  _notification createState() => _notification();
 }
 
-class _notificationState extends State<notification> {
+class _notification extends State<notification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    
+      appBar: AppBar(
+        title: Text("Notifications"),
+      ),
+      body: Center(
+        child: Text("No notifications yet."),
+      ),
     );
- }
+  }
+}*/
+
+class NotificationScreen extends StatefulWidget {
+  const NotificationScreen({Key? key}) : super(key: key);
+
+  @override
+  _NotificationScreenState createState() => _NotificationScreenState();
 }
 
+class _NotificationScreenState extends State<NotificationScreen> {
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.getToken().then((token) {
+      print("FCM Token: $token");
+      // Save this token on your backend to send notifications to this device
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Une commande en attente'),
+              content: Text(message.notification!.body ?? ''),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Notifications"),
+      ),
+      body: Center(
+        child: Text("No notifications yet."),
+      ),
+    );
+  }
+}

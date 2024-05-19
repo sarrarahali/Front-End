@@ -81,6 +81,7 @@ Row(
         child: Text(
           "Semaine",
           style: TextStyle(
+              fontSize: 10,
             color: _selectedIndex == 1 ? GlobalColors.mainColor : Colors.grey,
           ),
         ),
