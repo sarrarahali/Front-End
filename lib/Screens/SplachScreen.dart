@@ -11,8 +11,9 @@ class Spalch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 2), () {
-      Get.to(LoginScreen());
-    });
+  Get.to(LoginScreen());
+});
+
 
     return Scaffold(
       backgroundColor: GlobalColors.mainColor, // Set the background color here
@@ -20,7 +21,7 @@ class Spalch extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         child: Center(
-          child: Image.asset("images/splash.jpg"), // Your splash image
+          child: Image.asset("images/splash-screen.png"), // Your splash image
         ),
       ),
     );

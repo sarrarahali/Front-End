@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:boy/Screens/PasswordRecoveryScreen.dart';
 
 class RememberPW extends StatefulWidget {
-  const RememberPW({Key? key}) : super(key: key);
+  final String userEmail; // Add userEmail parameter
+  const RememberPW({Key? key,  required this.userEmail}) : super(key: key);
 
   @override
   _RememberPWState createState() => _RememberPWState();
@@ -22,7 +23,7 @@ class _RememberPWState extends State<RememberPW> {
 
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const PasswordRecoveryScreen()),
+              MaterialPageRoute(builder: (context) =>  PasswordRecoveryScreen(userEmail: widget.userEmail)),
             );
           },
           child: Text(

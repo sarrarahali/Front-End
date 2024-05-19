@@ -31,7 +31,11 @@ static HexColor localisation = HexColor('#FFC524');
 static HexColor localisationbg = HexColor('#FFF6EA');
 
 
-static HexColor trophy = HexColor('#F2F2F2');
+static HexColor trophy = HexColor('#F2F2F2'); //hethy mmartin 
+
+ static HexColor  text= HexColor('#A6A6A6') ;
+
+ // static HexColor  text= HexColor('#616161') ;
+ 
 
 }
-

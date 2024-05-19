@@ -8,6 +8,7 @@ import 'package:boy/Screens/mainhome_Screen.dart';
 
 
 import 'package:boy/Widgets/Colors.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:unicons/unicons.dart';
@@ -21,14 +22,24 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0; 
+   @override
+  void initState() {
+    super.initState();
+    // Initialize the screens
+     final List<Widget> _screens = [
+     
+    ];
+  }
+  CollectionReference commandes = FirebaseFirestore.instance.collection('commandes ');
+  
   final List<Widget> _screens = [
     
-    HomeScreen(),
+  //MainScreenhome(),
    
-
+HomeScreen(),
    MainPendingScreen(),
-   notification(),
-  
+   //notification(),
+  NotificationScreen(),
     ProfilScreen(),
   ];
 
@@ -43,10 +54,12 @@ class _MainScreenState extends State<MainScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _NavigationDestination(
-              icon: Icon(UniconsLine.home , color: _selectedIndex == 0 ? Colors.amber : Colors.grey),
+              icon: Icon(UniconsLine.home  , color: _selectedIndex == 0 ? Colors.amber : Colors.grey),
               onPressed: () {
                 _onItemTapped(0);
               },
+              //Ionicons.timer_outline,
+              //UniconsLine.list_ul
               selected: _selectedIndex == 0,
             ),
             _NavigationDestination(

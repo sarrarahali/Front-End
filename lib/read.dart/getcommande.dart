@@ -1,6 +1,4 @@
 
-
-
 import 'package:boy/Screens/PendingScreen.dart';
 import 'package:boy/Screens/aa.dart';
 import 'package:boy/Widgets/Colors.dart';
@@ -9,37 +7,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:boy/read.dart/getcommande.dart';
 import 'package:boy/Widgets/Easystepper.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:intl/intl.dart';
 
 class GetCommande extends StatelessWidget {
   final String documentId;
   final bool fromHomepage;
-
   GetCommande({Key? key, required this.documentId, required this.fromHomepage}) : super(key: key);
   int currentIndex = 0; // Index of the currently displayed order
 
   List<String> orderIds = []; // List of order ids, you can populate this with order ids
-  void acceptCommand(String documentId) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('commandes ')
-          .doc(documentId)
-          .update({'status': 'Ontheway'});
-      print('Command accepted successfully!');
-    } catch (e) {
-      print('Error accepting command: $e');
-    }
-  }
-void refuseCommand(String documentId) async {
-  try {
-    await FirebaseFirestore.instance
-        .collection('commandes ')
-        .doc(documentId)
-        .update({'status': 'Refused'});
-    print('Command refused successfully!');
-  } catch (e) {
-    print('Error refusing command: $e');
-  }
-}
+  
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +33,12 @@ void refuseCommand(String documentId) async {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+               
+              margin: EdgeInsets.symmetric(vertical: 4),
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(6),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -86,22 +64,28 @@ void refuseCommand(String documentId) async {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text(
-                          " ${data['status']}" + " ${data['Date']}",
-                          style: TextStyle(color: Colors.black),
-                        ),
+                      
+Text(
+  " ${data['status']}" + " ${DateFormat('dd/MM/yyyy').format(data['Date'].toDate())}", // Format the date here
+  style: TextStyle(color: Colors.black),
+),
+
                         IconButton(
   onPressed: () {
-    // Navigate to the command details page and pass necessary parameters
+    
+
+
+    
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CommandDetailsPage(
-          data: data, // Provide the data for the order
-          acceptCommand: acceptCommand, 
-          refuseCommand:refuseCommand,// Provide the acceptCommand function
-          documentId: documentId, // Provide the documentId of the order
-          source: 'HomeScreen', // Specify the source
+          
+          data: data, 
+          
+          documentId: documentId, 
+          source: 'HomeScreen', 
+           
         ),
       ),
     );
@@ -111,6 +95,7 @@ void refuseCommand(String documentId) async {
     color: GlobalColors.iconColor,
   ),
 ),
+
 
                         
                       ],

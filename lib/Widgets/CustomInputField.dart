@@ -1,3 +1,4 @@
+import 'package:boy/Widgets/Colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomIputField extends StatelessWidget {
@@ -9,7 +10,7 @@ class CustomIputField extends StatelessWidget {
   final  bool obscure ;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
-
+final FocusNode? focusNode; 
   const CustomIputField({
   this.suffixIcon,
     required this.label,
@@ -19,6 +20,7 @@ class CustomIputField extends StatelessWidget {
      this.obscure = false,
      this.validator,
      this.onChanged,
+      this.focusNode, 
     Key? key,
   }) : super(key: key);
 
@@ -29,21 +31,22 @@ class CustomIputField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.grey,
+          style:  TextStyle(
+            color:  GlobalColors.TextColor,
             fontSize: 16,
           ),
         ),
-        SizedBox(height: 12),
+        SizedBox(height: 8),
         TextFormField(
-          
+           
           obscureText: obscure ,
-          focusNode: FocusNode(),
+          focusNode:  focusNode,
           controller: controller,
           keyboardType: keyboard,
+            style: TextStyle(fontSize: 20), 
           decoration: InputDecoration(
             suffixIcon: suffixIcon,
-            fillColor: Color.fromARGB(255, 194, 192, 192),
+            fillColor: GlobalColors.TextFormField,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(100.0),
               borderSide: const BorderSide(width: 0, style: BorderStyle.none),
