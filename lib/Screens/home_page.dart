@@ -7,7 +7,8 @@ import 'package:boy/Widgets/search.dart';
 import 'package:boy/read.dart/getcommande.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  
+  const HomeScreen({Key? key, }) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -19,7 +20,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int pendingOrdersCount = 0;
   bool showPinView = false;
   late TextEditingController _searchController;
-  bool isIdNotFound = false; // Track whether the entered ID is not found
+  bool isIdNotFound = false; 
+ 
 
   @override
   void initState() {
@@ -47,7 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
     for (final docID in docIDs) {
       FirebaseFirestore.instance.collection('commandes ').doc(docID).get().then((snapshot) {
         final data = snapshot.data() as Map<String, dynamic>;
-        if (data['status'] == 'pending' && !(data['refusedBy'] ?? [] ).contains(userId)   ) {
+       if (data['status'] == 'pending' && 
+              !(data['refusedBy'] ?? []).contains(userId) && 
+              (data['acceptedByUserId'] == null || data['acceptedByUserId'].isEmpty)) {
           setState(() {
             pendingOrdersCount++;
           });
@@ -64,6 +68,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     CollectionReference commandes = FirebaseFirestore.instance.collection('commandes ');
@@ -78,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Stack(
           children: [
             if (showPinView && hasPendingOrders)
-              MapScreen(commandes: commandes),
+              MapScreen(commandes: commandes , fromHomepage: true , showPolyline: true  ),
             Padding(
               padding: EdgeInsets.all(30),
               child: Column(
@@ -178,9 +184,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
+                   // SizedBox(height: 10),
                     if (hasPendingOrders) // Display orders if there are pending orders
                       Expanded(
                         child: ListView.builder(
+                          
   itemCount: docIDs.length,
   itemBuilder: (context, index) {
     return FutureBuilder<DocumentSnapshot>(
@@ -232,7 +240,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
   }
-/*----
+
+
+  
+/*
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -309,7 +320,7 @@ Widget build(BuildContext context) {
       child: Stack(
         children: [
           if (showPinView && hasPendingOrders)
-            MapScreen(commandes: commandes),
+            MapScreen(commandes: commandes , fromHomepage: true , showPolyline: true ),
           Padding(
             padding: EdgeInsets.all(30),
             child: Column(

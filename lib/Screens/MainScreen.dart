@@ -9,6 +9,7 @@ import 'package:boy/Screens/mainhome_Screen.dart';
 
 import 'package:boy/Widgets/Colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:unicons/unicons.dart';
@@ -22,10 +23,11 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0; 
+  
    @override
   void initState() {
     super.initState();
-    // Initialize the screens
+    
      final List<Widget> _screens = [
      
     ];
@@ -33,13 +35,14 @@ class _MainScreenState extends State<MainScreen> {
   CollectionReference commandes = FirebaseFirestore.instance.collection('commandes ');
   
   final List<Widget> _screens = [
-    
-  //MainScreenhome(),
-   
-HomeScreen(),
+MainScreenhome(),
    MainPendingScreen(),
-   //notification(),
-  NotificationScreen(),
+   OnTheWayOrdersScreen(
+        acceptedByUserId: FirebaseAuth.instance.currentUser!.uid,
+        
+      ),
+ 
+
     ProfilScreen(),
   ];
 
@@ -96,6 +99,7 @@ HomeScreen(),
   }
 }
 
+
 class _NavigationDestination extends StatelessWidget {
   final Icon icon;
   final VoidCallback onPressed;
@@ -133,9 +137,6 @@ class _NavigationDestination extends StatelessWidget {
     );
   }
 }
-
-
-
 
 
 
