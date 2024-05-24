@@ -140,10 +140,10 @@ class _ProfilScreenState extends State<ProfilScreen> {
                         child: IndexedStack(
                           index: _selectedIndex,
                           children:  [
-                            buildInformation(),
-
+                           //buildInformation(),
+BuildInformation(),
                             //HistoriqueScreen(),
-OrdersPage(),
+                            OrdersPage(),
                             //BuildHistorique(),
                            
                             buildStatistiques(),

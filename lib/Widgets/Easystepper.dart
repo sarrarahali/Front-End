@@ -134,7 +134,6 @@ class _easy_stepperState extends State<easy_stepper> {
           activeStep = index;
         });
 
-        // Notify the parent widget about the status change
         widget.onStatusChanged(status.values[index]);
       },
     );

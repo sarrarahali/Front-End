@@ -1,29 +1,28 @@
+
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:boy/Screens/PendingScreen.dart';
+import 'package:boy/Screens/map.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:ionicons/ionicons.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:boy/Widgets/Colors.dart';
 import 'package:boy/Widgets/CustomButton.dart';
 import 'package:intl/intl.dart'; // Import the intl package
+
 class CommandDetailsPage extends StatelessWidget {
   final Map<String, dynamic> data;
-
   final String documentId;
   final String source;
 
   const CommandDetailsPage({
     Key? key,
     required this.data,
-
     required this.documentId,
     required this.source,
   }) : super(key: key);
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +91,19 @@ class CommandDetailsPage extends StatelessWidget {
                       ),
                       child: IconButton(
                         onPressed: () {
-                          // Add functionality here if needed
+                          
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MapScreen(
+                                commandes: FirebaseFirestore.instance.collection('commandes '),
+                                specificOrderLocation: data['Localisation'],
+                                fromHomepage: source == 'HomeScreen',
+                                showPolyline: source == 'PendingScreen',
+                                source: source, // Pass the source information
+                              ),
+                            ),
+                          );
                         },
                         icon: Image.asset("images/pin-icon.png"),
                       ),
@@ -189,9 +200,8 @@ class CommandDetailsPage extends StatelessWidget {
                           SizedBox(width: 3),
                           Text(
                             DateFormat.Hm().format(data['Date'].toDate()),
-                           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
-                              ),
-
+                            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
+                          ),
                           SizedBox(width: 30),
                           Image.asset("images/map-location.png"),
                           SizedBox(width: 3),
@@ -205,37 +215,36 @@ class CommandDetailsPage extends StatelessWidget {
                   ),
                 ),
               ),
-             // Comment card
-Card(
-  elevation: 5,
-  margin: EdgeInsets.symmetric(vertical: 10),
-  child: Padding(
-    padding: EdgeInsets.all(20),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Comment",
-          style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 10),
-        // Check if comment is null
-        data['Comment'] != null
-            ? Text(
-                "${data['Comment']}",
-                textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.black, fontSize: 17),
-              )
-            : Text(
-                "Aucun commentaire pour cette commande",
-                textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.black, fontSize: 17),
+              // Comment card
+              Card(
+                elevation: 5,
+                margin: EdgeInsets.symmetric(vertical: 10),
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Comment",
+                        style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      // Check if comment is null
+                      data['Comment'] != null
+                          ? Text(
+                              "${data['Comment']}",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(color: Colors.black, fontSize: 17),
+                            )
+                          : Text(
+                              "Aucun commentaire pour cette commande",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(color: Colors.black, fontSize: 17),
+                            ),
+                    ],
+                  ),
+                ),
               ),
-      ],
-    ),
-  ),
-),
-
               SizedBox(height: 20),
               // Display buttons based on source
               if (source == 'HomeScreen') ...[
@@ -243,61 +252,65 @@ Card(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Expanded(
-        flex: 2,
-        child: CustomButton(
-          title: "Accepter",
-         onPressed: () async {
-    // Get current user's ID
-    String userId = FirebaseAuth.instance.currentUser!.uid;
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: CustomButton(
+                              title: "Accepter",
+                              onPressed: () async {
+                                // Get current user's ID
+                                String userId = FirebaseAuth.instance.currentUser!.uid;
 
-    // Update the 'acceptedByUserId' field in Firestore
-    DocumentReference orderRef = FirebaseFirestore.instance.collection('commandes ').doc(documentId);
-    await orderRef.update({
-      'acceptedByUserId': userId,
-    });
+                                // Update the 'acceptedByUserId' field in Firestore
+                                DocumentReference orderRef =
+                                    FirebaseFirestore.instance.collection('commandes ').doc(documentId);
+                                await orderRef.update({
+                                  'acceptedByUserId': userId,
+                                });
 
-    // Show a message or update the UI accordingly
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Order accepted')));
-  },
-          color: GlobalColors.AcceptButton,
-        ),
-      ),
-      SizedBox(width: 10),
-      Expanded(
-        flex: 2,
-        child: CustomButton(
-          title: "Refuser",
-          onPressed: () async {
-    // Get current user's ID
-    String userId = FirebaseAuth.instance.currentUser!.uid;
+                                // Show a message or update the UI accordingly
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text('Order accepted')));
+                                    await Future.delayed(
+                                              Duration(seconds: 2));
 
-    // Update the 'refusedBy' field in Firestore
-    DocumentReference orderRef = FirebaseFirestore.instance.collection('commandes ').doc(documentId);
-    await orderRef.update({
-      'refusedBy': FieldValue.arrayUnion([userId])
-    });
+                                          Navigator.pop(context);
+                              },
+                              color: GlobalColors.AcceptButton,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            flex: 2,
+                            child: CustomButton(
+                              title: "Refuser",
+                              onPressed: () async {
+                                // Get current user's ID
+                                String userId = FirebaseAuth.instance.currentUser!.uid;
 
-    // Show a message or update the UI accordingly
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Order refused')));
-  },
-          color: GlobalColors.RefuseButton,
-        ),
-      ),
-    ],
-  ),
-),
+                                // Update the 'refusedBy' field in Firestore
+                                DocumentReference orderRef =
+                                    FirebaseFirestore.instance.collection('commandes').doc(documentId);
+                                await orderRef.update({
+                                  'refusedBy': FieldValue.arrayUnion([userId])
+                                });
 
-                  
+                                // Show a message or update the UI accordingly
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(content: Text('Order refused')));
+                                    await Future.delayed(
+                                              Duration(seconds: 2));
 
-
-                
-
-
-
+                                          Navigator.pop(context);
+                              },
+                              color: GlobalColors.RefuseButton,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -368,14 +381,13 @@ Card(
                                         title: "Register",
                                         onPressed: () async {
                                           if (dropdownValue == 'cancelled') {
-                                            await FirebaseFirestore.instance
-                                                .collection('CancelledOrders')
-                                                .doc(documentId)
-                                                .set({
-                                              'ID': data['ID'],
-                                              'NomPrenom': data['NomPrenom'],
-                                              'DateCancelled': Timestamp.now(),
-                                            });
+                                            String userId = FirebaseAuth.instance.currentUser!.uid;
+await FirebaseFirestore.instance.collection('CancelledOrders').doc(userId).set({
+  'ID': data['ID'],
+   'UserID': userId, // Storing the user's ID
+  'NomPrenom': data['NomPrenom'],
+  'DateCancelled': Timestamp.now(),
+});
 
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(SnackBar(
@@ -384,14 +396,14 @@ Card(
                                               duration: Duration(seconds: 2),
                                             ));
                                           } else {
-                                            await FirebaseFirestore.instance
-                                                .collection('DeliveredOrders')
-                                                .doc(documentId)
-                                                .set({
-                                              'ID': data['ID'],
-                                              'NomPrenom': data['NomPrenom'],
-                                              'DateDelivered': Timestamp.now(),
-                                            });
+                                            String userId = FirebaseAuth.instance.currentUser!.uid;
+await FirebaseFirestore.instance.collection('DeliveredOrders').doc(userId).set({
+  'ID': data['ID'],
+   'UserID': userId, // Storing the user's ID
+  'NomPrenom': data['NomPrenom'],
+  'DateDelivered': Timestamp.now(),
+});
+                                           
 
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(SnackBar(
@@ -440,3 +452,6 @@ Card(
     );
   }
 }
+
+
+

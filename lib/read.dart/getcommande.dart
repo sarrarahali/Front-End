@@ -2,13 +2,14 @@
 import 'package:boy/Screens/PendingScreen.dart';
 import 'package:boy/Screens/aa.dart';
 import 'package:boy/Widgets/Colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:boy/read.dart/getcommande.dart';
 import 'package:boy/Widgets/Easystepper.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:intl/intl.dart';
-
+/*
 class GetCommande extends StatelessWidget {
   final String documentId;
   final bool fromHomepage;
@@ -85,7 +86,7 @@ Text(
           
           documentId: documentId, 
           source: 'HomeScreen', 
-           
+        
         ),
       ),
     );
@@ -144,7 +145,149 @@ Text(
       }
   
 
+*/
 
+import 'package:boy/Screens/PendingScreen.dart';
+import 'package:boy/Screens/aa.dart';
+import 'package:boy/Widgets/Colors.dart';
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:intl/intl.dart';
 
+class GetCommande extends StatelessWidget {
+  final String documentId;
+  final bool fromHomepage;
+  GetCommande({Key? key, required this.documentId, required this.fromHomepage}) : super(key: key);
+  int currentIndex = 0; // Index of the currently displayed order
 
+  List<String> orderIds = []; // List of order ids, you can populate this with order ids
 
+  @override
+  Widget build(BuildContext context) {
+    CollectionReference commandes = FirebaseFirestore.instance.collection('commandes ');
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: commandes.doc(documentId).get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData && snapshot.data!.exists) {
+            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+            return
+                 Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+            margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Expanded(
+                                child: Text(
+                                  "#${data['ID']} ${data['NomPrenom']}",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                "${data['Prix']} DT",
+                                style: TextStyle(
+                                  color: GlobalColors.mainColorbg,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 4.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                "Pending on${DateFormat('yyyy-MM-dd').format(data['Date'].toDate())}",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              Text(
+                                "à la livraison",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ],
+                          ),
+                          if (!fromHomepage)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: GlobalColors.localisationbg,
+                                    ),
+                                    child: Icon(
+                                      Ionicons.location_outline,
+                                      color: GlobalColors.localisation,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8.0),
+                                  Flexible(
+                                    child: Text(
+                                      "${data['Localisation']}",
+                                      style: TextStyle(fontSize: 16.0),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 3,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CommandDetailsPage(
+                                data: data,
+                                documentId: documentId,
+                                source: 'HomeScreen',
+                              ),
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          Ionicons.chevron_forward_outline,
+                          color: GlobalColors.iconColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+                 );
+    
+          
+          } else {
+            return Text("Document does not exist.");
+          }
+        }
+        return CircularProgressIndicator();
+      }
+    );
+  }
+}

@@ -57,7 +57,7 @@ class _MainPendingScreenState extends State<MainPendingScreen> {
         onGenerateRoute: (settings) {
           if (selectedIndex == 0) {
             return MaterialPageRoute(
-              builder: (context) => PendingScreen(orderData: orderData ?? {}),
+              builder: (context) => PendingScreen(orderData: orderData ?? {}, ),
             );
           } else if (selectedIndex == 1 && orderData != null) {
             return MaterialPageRoute(
@@ -65,7 +65,7 @@ class _MainPendingScreenState extends State<MainPendingScreen> {
                 data: orderData!,
                 documentId: 'documentId', // Replace with the actual document ID
                 source: 'PendingScreen',
-                
+               
               ),
             );
           }

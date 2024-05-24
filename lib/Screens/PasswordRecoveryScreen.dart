@@ -148,44 +148,7 @@ class _PasswordRecoveryScreenState extends State<PasswordRecoveryScreen> {
     );
   }
 
- /* Widget buildPhoneNumberInput() {
-  return Container(
-    width: 300, // Set desired width
-    child: Row(
-      children: [
-        Container(
-          
-          alignment: Alignment.center,
-          width: 70, 
-          child: Text(
-            '+216',
-            style: TextStyle(fontSize: 30),
-          ),
-        ),
-        SizedBox(width: 20),
-        Expanded(
-          child: TextField(
-            controller: phoneController,
-            keyboardType: TextInputType.phone,
-            style: TextStyle(fontSize: 30), 
-            onChanged: (value) {
-              if (value.length > 8) {
-               
-                phoneController.text = value.substring(0, 8);
-                
-                phoneController.selection = TextSelection.fromPosition(TextPosition(offset: phoneController.text.length));
-              }
-            },
-          ),
-        ),
-      ],
-    ),
-  );
-}*/
-
-
-
-
+ 
   Widget _buildCustomKeypad() {
     return Container(
       alignment: Alignment.center,
@@ -328,48 +291,5 @@ Future<void> sendCode(String phoneNumber) async {
     });
   }
 }
-
-
-
-
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*Widget buildPhoneNumberInput() {
-  return Container(
-    width: 300, // Set desired width
-    child: TextField(
-       decoration: InputDecoration(
-        // Set prefix text directly within InputDecoration
-        prefixText: '+216 ',
-        // Optionally, you can style the prefix text
-        prefixStyle: TextStyle(fontSize: 15),
-      ),
-      controller: phoneController,
-      keyboardType: TextInputType.phone, // Set keyboardType to phone
-      
-      onChanged: (value) {
-          if (value.length > 8) {
-            // Truncate the input to 8 characters if it exceeds 8 characters
-            phoneController.text = value.substring(0, 8);
-            // Move the cursor to the end of the text
-            phoneController.selection = TextSelection.fromPosition(TextPosition(offset: phoneController.text.length));
-          }
-        },
-       
-    ),
-  );
-}*/
